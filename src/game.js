@@ -7,9 +7,13 @@ import Asteroid from './Asteroid.js';
 
 import webglp from '../../../rocket-boots-repos/webglp/webglp.js';
 
+const SHADERS = [
+	['stars-v.glsl', 'stars-f.glsl'],
+	['v.glsl', 'f.glsl'],
+];
 const NUM_OF_ASTEROIDS = 404;
 const SUN_MASS_MULTIPLIER = 10000;
-const ASTEROID_RADIUS = 100;
+const ASTEROID_RADIUS = 120;
 const ASTEROID_RADIUS_RANGE = 30;
 
 const MAX_ZOOM_DELTA = 600;
@@ -20,32 +24,39 @@ const ZOOM_MULTIPLIER = .001;
 let zoom = 12.;
 let glp;
 let lastAsteroidCount = NUM_OF_ASTEROIDS;
+let loop;
+let isStarted = false;
 
 const objects = [];
 const sun = setupSun();
 const asteroids = setupAsteroids(sun);
 const ship = setupShip(sun)
 
+const $ = (id) => document.getElementById(id);
 
-const draw = (ship) => {
+const draw = () => {
 	const uniforms = [
 		['iResolution', glp.gl.canvas.width, glp.gl.canvas.height],
 		['zoom', zoom],
 		['viewerPosition', ship.pos.x, ship.pos.y, 0.],
 		// ['color', 1., 1., 0., 1.],
 	];
+
+	// Draw stars background
+	glp.use(0).draw({ uniforms, buffs: [['position']] });
+
+	// Draw galaxy
 	const buffs = [
 		['position', { size: 3, stride: 6 }],
 		['color', { size: 3, stride: 6, offset: 3 }],
 	];
-	// glp.buff('position', vertices, { size: 3, stride: 6 });
-	// glp.buff('color', vertices, { size: 3, stride: 6, offset: 3 });
-	glp.draw({
+	glp.use(1).draw({
 		uniforms,
 		buffs,
 		verts: new Float32Array([]), 
 		vertSize: 6,
 		type: glp.gl.TRIANGLE_FAN,
+		clear: false,
 		// buffName: 'position',
 		// verts: vertices,
 	});
@@ -179,7 +190,7 @@ function setupAsteroids(sun) {
 };
 
 function setupSun() {
-	const baseVerts = SpaceObject.getRegularPolygonVerts(100, 40);
+	const baseVerts = SpaceObject.getRegularPolygonVerts(40, 40);
 	// [
 	// 	[0, 40, 0],
 	// 	[30, 30, 0],
@@ -200,22 +211,35 @@ function setupSun() {
 
 const setupLoop = (ship, countElt) => {
 	let t = 0;
-	const loop = () => {
+	const drawDom = (c) => {
+		if (lastAsteroidCount === c) { return; }
+		countElt.innerHTML = c;
+		lastAsteroidCount = c;
+		if (c === 0) {
+			$('win').style.display = 'block';
+		}
+	}
+	loop = () => {
 		window.requestAnimationFrame((now) => {
 			const { asteroidCount } = objectLoop((now - t) / 1000);
-			if (lastAsteroidCount !== asteroidCount) {
-				countElt.innerHTML = asteroidCount;
-				lastAsteroidCount = asteroidCount;
-			}
-			draw(ship);
+			drawDom(asteroidCount);
+			draw();
 			t = now;
 			loop();
 		});
 	};
-	loop();
+	objectLoop(0);
+	draw();
 	// objectLoop(0.1 / 1000);
 	// draw();
 };
+
+function startLoop() {
+	if (isStarted) { return; }
+	isStarted = true;
+	$('main').classList.add('go');
+	loop();
+}
 
 const getMousePosition = (e) => {
 	// fix for Chrome
@@ -231,12 +255,15 @@ const setupInput = (canvas, ship) => {
 		const zoomDir = (e.deltaY < 0 ? -1 : 1);
 		// cap the zoom
 		zoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoom + zoomDir * zoomSpeed));
+		// console.log(zoom);
+		if (!isStarted) { draw(); }
 	});
 	window.oncontextmenu = (e) => e.preventDefault();
 	canvas.onmousedown = canvas.ontouchstart = (e) => {
 		if (e.which === 3) { ship.engage(); }
 	};
 	canvas.onmouseup = canvas.ontouchend = (e) => {
+		startLoop();
 		if (e.which === 3) {
 			ship.disengage();
 			return;
@@ -256,11 +283,11 @@ const setupInput = (canvas, ship) => {
 
 // Create glp
 const init = async () => {
-	glp = await webglp.init('#canvas', [['v.glsl', 'f.glsl']], { fullscreen: true });
+	glp = await webglp.init('#canvas', SHADERS, { fullscreen: true });
 	window.z.glp = glp;
 	console.log(glp);
 	setupInput(glp.gl.canvas, ship, sun);
-	setupLoop(ship, document.getElementById('count'));
+	setupLoop(ship, $('count'));
 	return glp;
 }
 

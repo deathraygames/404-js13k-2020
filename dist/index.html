@@ -11,30 +11,98 @@
 			padding: 0;
 			color: rgba(255, 255, 255, 0.75);
 			font-family: Verdana, sans-serif;
+			background: #333;
+			text-align: center;
+			overflow: hidden;
 		}
 		header {
-			position: absolute; top: 1em;
+			position: absolute; top: 10%;
 			width: 100%;
-			text-align: center; z-index: 2;
+			z-index: 2;
+			user-select: none;
+			font-size: 8vmin;
+			transition: 5s all ease-in-out;
 		}
-		canvas {
+		.go header {
+			top: 1em;
+			font-size: 20px;
+		}
+		main {
 			position: absolute;
 			top: 0; left: 0;
 			width: 100%;
 			height: 100%;
-			margin: 0;
+			margin: 0 auto;
+		}
+		canvas {
+			width: 100vmin;
+			height: 100vmin;
+			margin: 0 auto;
 			background: #000;
+			/* position: absolute;
+			top: 0; left: 0;
+			width: 100vmin;
+			height: 100vmin;
+			margin: 0 auto;
+			background: #000; */
 		}
 		#total {
+			opacity: 0;
+			font-size: 0;
+			transition: 5s all ease-in-out;
+		}
+		.go #total {
+			font-size: 20px;
 			opacity: 0.5;
+		}
+		#intro {
+			position: absolute;
+			bottom: 10%;
+			left: 50%;
+			margin-left: -10em;
+			width: 20em;
+			border: solid 1px #87697F;
+			padding: 2em;
+			opacity: 1;
+			background: rgba(0,0,0,0.65);
+			transition: 5s all ease-in-out;
+		}
+		.go #intro {
+			opacity: 0;
+			bottom: -100%;
+		}
+		ul {
+			text-align: left;
+		}
+		a {
+			color: #87697F;
+		}
+		#win {
+			display: none;
+			color: rgba(153, 255, 77, 1);
 		}
 	</style>
 </head>
 <body scroll="no">
-	<header>
-		<span id="count">404</span><span id="total">/404</span> Orbiting Asteroids
-	</header>
-	<canvas id="canvas"></canvas>
+	<main id="main">
+		<header>
+			<span id="count">404</span><span id="total">/404</span> Orbiting Asteroids
+			<div id="win">YOU WIN!</div>
+		</header>
+		<canvas id="canvas"></canvas>
+		<div id="intro">
+			Controlled by mouse:
+			<ul>
+				<li>Scroll to zoom
+				<li>Move mouse to rotate
+				<li>Left-click to Fire
+				<li>Right-click for Thrust
+				<li>Click to start
+			</ul>
+			<p>Destroy all asteroids to win</p>
+			<p>Created for <a href="http://js13kgames.com/">js13kgames</a> 2020 by Luke</p>
+		</div>
+	</main>
 	<script src="game-window.js"></script>
 </body>
 </html>
