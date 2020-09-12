@@ -1,8 +1,10 @@
 import Polygon from './Polygon.js';
-import physics from '../../../rocket-boots-repos/physics/src/physics.js';
-import { Coords } from 'rocket-boots-coords';
+// import physics from '../../../rocket-boots-repos/physics/src/physics.js';
+// import { physics } from 'rocket-boots-physics';
+import physics from '../node_modules/rocket-boots-physics/src/physics.js';
+// import { Coords } from 'rocket-boots-coords';
 
-physics.Coords = Coords;
+// physics.Coords = Coords;
 physics.bigG = .000001;
 
 class SpaceObject extends Polygon {
@@ -39,6 +41,8 @@ class SpaceObject extends Polygon {
 		o.calcRadii();
 		o.calcVerts();
 		o.calcMass();
+		
+		o.Coords = physics.Coords;
 	}
 
 	alignToCenter() {
@@ -117,21 +121,21 @@ class SpaceObject extends Polygon {
 		x += center[0];
 	}
 
-	clearHit() {
-		this.hit = false;
-		return this;
-	}
+	// clearHit() {
+	// 	this.hit = false;
+	// 	return this;
+	// }
 
-	checkHits(objects) {
-		objects.forEach((b) => this.checkHit(b));
-	}
+	// checkHits(objects) {
+	// 	objects.forEach((b) => this.checkHit(b));
+	// }
 
-	checkHit(obj) {
-		if (obj === this) { return; }
-		if (this.objectInside(obj)) {
-			this.hit = true;
-		}		
-	}
+	// checkHit(obj) {
+	// 	if (obj === this) { return; } // can't hit self
+	// 	if (this.objectInside(obj)) {
+	// 		this.hit = true;
+	// 	}		
+	// }
 
 	setOrbitalVelocity(bigObj) {
 		this.vel.set(physics.getOrbitalVelocity(this, bigObj));

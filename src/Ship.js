@@ -1,5 +1,5 @@
 import SpaceObject from './SpaceObject.js';
-import { Coords } from 'rocket-boots-coords';
+// import { Coords } from 'rocket-boots-coords';
 
 const ONE_MOMENT = 0.02; // typical time "t" for thrust
 const SHIP_BASE_VERTS = [
@@ -37,6 +37,7 @@ class Ship extends SpaceObject {
 		);
 		this.mass *= SHIP_DENSITY;
 		this.thrustMagnitude = SHIP_THRUST * this.mass;
+		this.baseColor = [0.6, 1., .3];
 	}
 
 	setRotation(rot) {
@@ -47,7 +48,7 @@ class Ship extends SpaceObject {
 		const rot = this.rotation + this.facingRotationOffset;
 		const x = Math.cos(rot);
 		const y = Math.sin(rot);
-		return new Coords(x, y);
+		return new this.Coords(x, y);
 	}
 
 	ongoing(t) {

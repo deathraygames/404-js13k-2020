@@ -5,13 +5,13 @@ uniform vec3 viewerPosition;
 uniform float zoom;
 
 #define STARDUST_DEPTHS 10.
-#define STARDUST_DEPTH_SPEED 0.01
-#define STARFIELD_QUANT 130. // Lower = more
+#define STARDUST_DEPTH_SPEED .001
+#define STARFIELD_QUANT 160. // Lower = more
 #define HOT_COLOR_MULT 1.2
 #define STARDUST_ZOOM_MAX 50. // the highest zoom that shows stardust
 
 #define STAR_DEPTHS 5.
-#define STAR_DEPTH_SPEED 0.001
+#define STAR_DEPTH_SPEED 0.00005
 
 vec3 nrand3(vec2 n) {
 	vec3 a = fract( cos( n.x*8.3e-3 + n.y )*vec3(1.3e5, 4.7e5, 2.9e5) );

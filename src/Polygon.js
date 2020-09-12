@@ -1,18 +1,19 @@
-import { Coords } from 'rocket-boots-coords';
 
 class Polygon {
 	constructor(verts) {
 		this.verts = verts;
 	}
 
-	static getRegularPolygonVerts(n = 3, r = 1) {
+	static getRegularPolygonVerts(n = 3, r = 1, rand = 0) {
 		const verts = [];
 		const a = 0;
+		const TWO_PI = Math.PI * 2;
 		for(let i = 0; i < n; i++) {
 			// Thanks to https://youtu.be/H9CSWMxJx84?t=2729
+			const vr = (rand) ? r + (Math.random() * rand) : r;
 			verts.push([
-				r * Math.cos(a + i * Math.PI * 2 / n), // x
-				r * Math.sin(a + i * Math.PI * 2 / n), // y
+				vr * Math.cos(a + i * TWO_PI / n), // x
+				vr * Math.sin(a + i * TWO_PI / n), // y
 				0
 			]);
 		}
@@ -20,18 +21,15 @@ class Polygon {
 	}
 
 	/** Is an array of vertices inside this object's vertices? */
-	objectInside(obj) {
-		const { verts } = obj;
-		for(let i = 0; i < verts.length; i++) {
-			if (Polygon.pointInPolygon(verts[i], this.verts)) {
-				// const text = 'point [' + verts[i].join(',') + '] in my verts ' + this.verts.join(',');
-				// // console.log('point', verts[i], 'from', verts, 'in my verts', this.verts);
-				// this.hits.push(text);
-				return true;
-			}
-		}
-		return false;
-	}
+	// objectInside(obj) {
+	// 	const { verts } = obj;
+	// 	for(let i = 0; i < verts.length; i++) {
+	// 		if (Polygon.pointInPolygon(verts[i], this.verts)) {
+	// 			return true;
+	// 		}
+	// 	}
+	// 	return false;
+	// }
 
 	static getCenter(verts) {
 		const vl = verts.length;
@@ -59,19 +57,20 @@ class Polygon {
 	// From https://github.com/substack/point-in-polygon
 	// ray-casting algorithm based on
 	// http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
-	static pointInPolygon (point, vs) {
-		const x = point[0], y = point[1];
+
+	// static pointInPolygon (point, vs) {
+	// 	const x = point[0], y = point[1];
 		
-		let inside = false;
-		for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-			const xi = vs[i][0], yi = vs[i][1];
-			const xj = vs[j][0], yj = vs[j][1];
-			const intersect = ((yi > y) != (yj > y))
-				&& (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-			if (intersect) inside = !inside;
-		}
-		return inside;
-	};
+	// 	let inside = false;
+	// 	for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+	// 		const xi = vs[i][0], yi = vs[i][1];
+	// 		const xj = vs[j][0], yj = vs[j][1];
+	// 		const intersect = ((yi > y) != (yj > y))
+	// 			&& (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+	// 		if (intersect) inside = !inside;
+	// 	}
+	// 	return inside;
+	// }
 
 	// https://stackoverflow.com/a/12414951/1766230
 	/**
@@ -82,6 +81,7 @@ class Polygon {
 	 * @param b an array of connected points [{x:, y:}, {x:, y:},...] that form a closed polygon
 	 * @return true if there is any intersection between the 2 polygons, false otherwise
 	 */
+	/*
 	static doPolygonsIntersect (a, b) {
 		var polygons = [a, b];
 		var minA, maxA, projected, i, i1, j, minB, maxB;
@@ -136,6 +136,7 @@ class Polygon {
 		}
 		return true;
 	};
+	*/
 }
 
 export default Polygon;

@@ -5,7 +5,8 @@ const randomRadius = () => 1.5 + Math.random() * .5 - Math.random() * .5;
 
 class Asteroid extends SpaceObject {
 	constructor() {
-		const baseVerts = SpaceObject.getRegularPolygonVerts(randomVertNum(), randomRadius());
+		const r = randomRadius();
+		const baseVerts = SpaceObject.getRegularPolygonVerts(randomVertNum(), r, r * .2);
 		super(baseVerts);
 	}
 }

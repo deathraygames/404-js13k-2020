@@ -1,5 +1,4 @@
 attribute vec3 position;
-// uniform vec3 translation;
 uniform vec3 viewerPosition;
 uniform float zoom;
 attribute vec4 color;

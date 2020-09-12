@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/deathraygames/404-js13k-2020#readme",
   "devDependencies": {
-    "bestzip": "^2.1.6",
+    "bestzip": "^2.1.7",
     "closure-webpack-plugin": "^2.3.0",
     "google-closure-compiler": "^20200719.0.0",
     "webpack": "^4.44.1",
@@ -33,9 +33,7 @@
   },
   "dependencies": {
     "rocket-boots-coords": "git+https://github.com/rocket-boots/coords.git#v0.6.0",
-    "rocket-boots-loop": "git+https://github.com/rocket-boots/Loop.git#master",
-    "rocket-boots-physics": "git+https://github.com/rocket-boots/physics.git#master",
-    "stars-webgl": "git+https://github.com/rocket-boots/webgl-starfield.git#master",
-    "webglp": "git+https://github.com/rocket-boots/webglp.git#master"
+    "rocket-boots-physics": "git+https://github.com/rocket-boots/physics.git#v0.4.0",
+    "webglp": "git+https://github.com/rocket-boots/webglp.git#v0.1.0"
   }
 }
