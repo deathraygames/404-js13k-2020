@@ -1,10 +1,10 @@
 import Polygon from './Polygon.js';
 // import physics from '../../../rocket-boots-repos/physics/src/physics.js';
-// import { physics } from 'rocket-boots-physics';
 import physics from '../node_modules/rocket-boots-physics/src/physics.js';
-// import { Coords } from 'rocket-boots-coords';
 
+// import { Coords } from 'rocket-boots-coords';
 // physics.Coords = Coords;
+
 physics.bigG = .000001;
 
 class SpaceObject extends Polygon {
@@ -22,7 +22,7 @@ class SpaceObject extends Polygon {
 					c(),
 				],
 				hitColor: [.7, 0., 0.],
-				boundingBox: [],
+				// boundingBox: [],
 				hit: false,
 				verts: [], // set in calc
 				vc: null, // set in calc
@@ -32,6 +32,7 @@ class SpaceObject extends Polygon {
 				// acc: new Coords(),
 				// vel: new Coords(),
 				r: 0,
+				outerRadius: 0,
 				innerRadius: 0,
 				children: [],
 			}
@@ -61,7 +62,7 @@ class SpaceObject extends Polygon {
 	calcRadii() {
 		let inner = Infinity;
 		// Outer/largest radius
-		this.r = this.baseVerts.reduce((n, v) => {
+		this.outerRadius = this.r = this.baseVerts.reduce((n, v) => {
 			// Store radius on each base vertex for quicker computation later
 			const r = v.r = Polygon.getRadius(v);
 			if (r < inner) { inner = r; }
@@ -79,7 +80,7 @@ class SpaceObject extends Polygon {
 		return this.vc;
 	}
 
-	getColor() {
+	getColor(v, bv, i) {
 		const bc = this.baseColor;
 		return [
 			bc[0] + (this.hit ? .1 : 0.),
@@ -92,8 +93,8 @@ class SpaceObject extends Polygon {
 		let vc = [];
 		this.verts.length = 0;
 		this.baseVerts.forEach((bv, i) => {
-			this.verts[i] = [bv[0] + this.pos.x, bv[1] + this.pos.y, 0]; // bv[2] + this.pos.z];
-			vc = vc.concat(this.verts[i]).concat(this.getColor());
+			const v = this.verts[i] = [bv[0] + this.pos.x, bv[1] + this.pos.y, 0]; // bv[2] + this.pos.z];
+			vc = vc.concat(v).concat(this.getColor(v, bv, i));
 		});
 		this.vc = new Float32Array(vc);
 	}

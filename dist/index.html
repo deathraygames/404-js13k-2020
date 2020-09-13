@@ -3,9 +3,9 @@
 <head>
 	<title>404 Orbiting Asteroids - A js13k game for 2020</title>
 	<meta charset="utf-8">
-	<meta name="description" content="Simple desktop game in 13 kb for js13k 2020">
+	<meta name="description" content="Simple asteroids-like desktop game in 13 kb for js13k 2020">
 	<meta name="author" content="Luke Nickerson">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<style>
 		body {
 			padding: 0;
@@ -103,6 +103,15 @@
 			color: rgba(255, 255, 255, 0.5);
 			font-size: 80%;
 		}
+		#restart {
+			font-size: inherit;
+			background: rgba(153, 255, 77, 1);
+			border: 0;
+			padding: 0.75em 2em;
+			text-transform: uppercase;
+			cursor: pointer;
+			margin: 1em;
+		}
 	</style>
 </head>
 <body scroll="no">
@@ -137,7 +146,8 @@
 			<strong>You died.</strong>
 			<p id="sun">The sun is hot! 🌞+🚀=💀</p>
 			<p id="bullet">Ricochet! 🚀+🔫=💀</p>
-			<p>🔄 Refresh the page (F5) to start over.</p>
+			<p>Click below or 🔄 Refresh the page (F5) to start over.</p>
+			<button type="button" id="restart">Restart</button>
 		</section>
 	</main>
 	<script src="game-window.js"></script>

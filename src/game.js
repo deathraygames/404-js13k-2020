@@ -41,6 +41,7 @@ const rand = (n = 1) => Math.random() * n;
 
 const achievements = {};
 const objects = [];
+const effects = [];
 const sun = setupSun();
 const asteroids = setupAsteroids(sun);
 const ship = setupShip(sun)
@@ -58,7 +59,7 @@ const draw = () => {
 	// Draw stars background
 	glp.use(0).draw({ uniforms, buffs: [['position']] });
 
-	// Draw galaxy
+	// Draw "space" galaxy
 	const buffs = [
 		['position', { size: 3, stride: 6 }],
 		['color', { size: 3, stride: 6, offset: 3 }],
@@ -72,7 +73,7 @@ const draw = () => {
 		clear: false,
 	});
 
-	objects.forEach((o) => {
+	effects.concat(objects).forEach((o) => {
 		// glp.unif('translation', 0, 0, 0); // o.x, o.y, o.z);
 		glp.draw({
 			// uniforms: [],
@@ -99,7 +100,7 @@ function achieve(what) {
 	}
 }
 
-//--------------- OBJECTS
+//--------------- OBJECT MANAGEMENT
 
 const removeDeletedObjects = (deleteIndices = []) => {
 	for(let d = deleteIndices.length - 1; d >= 0; d--) {
@@ -145,9 +146,15 @@ const objectLoop = (t) => {
 			}
 		}
 	});
+	effects.forEach((o) => {
+		o.rotate(t);
+		o.calcVertsWithRotation();
+	});
 	removeDeletedObjects(deleteIndices);
 	return { asteroidCount };
 };
+
+//-------------------- OBJECT CREATION
 
 function makeDecay(o, n = 8) {
 	o.decayTime = n;
@@ -160,8 +167,8 @@ function makeDecay(o, n = 8) {
 function die(reason) {
 	isDead = true;
 	ship.delete = true;
-	makeFragments(ship);
-	makeBlast(ship.pos, ship.vel);
+	makeFragments(ship, 10);
+	makeBlast(ship.pos, ship.vel, 5);
 	sounds.death();
 	endGame(reason);
 }
@@ -188,6 +195,7 @@ const makeBullet = (ship, bulletPower) => {
 	b.mass *= 0.5;
 	makeDecay(b, 10);
 	b.damage = (dmg, objHit) => {
+		b.baseColor[0] = .9; // red-ify the richoceting bullets
 		// console.log(dmg / 10);
 		b.decayTime *= 0.5;
 		if (objHit instanceof Asteroid) {
@@ -200,9 +208,9 @@ const makeBullet = (ship, bulletPower) => {
 	objects.push(b);
 };
 
-function makeBlast(pos, vel) {
-	const b = new Blast(pos, vel);
-	const b2 = new Blast(pos, vel, [1., 1., 0.], 0.05, 3);
+function makeBlast(pos, vel, scale = 1) {
+	const b = new Blast(pos, vel, [1., 0.5, 0.], .2 * scale, 8);
+	const b2 = new Blast(pos, vel, [1., 1., 0.], 0.05 * scale, 3);
 	objects.push(b);
 	objects.push(b2);
 }
@@ -233,8 +241,8 @@ function makeFragment(o, n) {
 	objects.push(f);
 }
 
-function makeFragments(o) {
-	const n = 2 + Math.floor(rand(4));
+function makeFragments(o, extra = 4) {
+	const n = 2 + Math.floor(rand(extra));
 	for(let i = 0; i < n; i++) { makeFragment(o, n); }
 }
 
@@ -288,23 +296,24 @@ function setupAsteroids(sun) {
 	}
 };
 
-// function makeOuterSun(s, r, color) {
-// 	const baseVerts = SpaceObject.getRegularPolygonVerts(s, r);
-// 	const outerSun = new SpaceObject(baseVerts);
-// 	outerSun.baseColor = color;
-// 	outerSun.mass = 0;
-// 	outerSun.vel = null;
-// 	outerSun.move = () => {};
-// 	outerSun.collide = () => {};
-// 	outerSun.gravitate = null;
-// 	giveSpin(outerSun, .1);
-// 	objects.push(outerSun);
-// }
+function makeOuterSun(s, r, color) {
+	const baseVerts = SpaceObject.getRegularPolygonVerts(s, r);
+	const outerSun = new SpaceObject(baseVerts);
+	outerSun.baseColor = color;
+	outerSun.mass = 0;
+	outerSun.vel = null;
+	outerSun.move = () => {};
+	outerSun.collide = () => {};
+	outerSun.gravitate = null;
+	giveSpin(outerSun, .1);
+	effects.push(outerSun);
+}
 
 function setupSun() {
 	const sun = new Sun();
-	// const color = sun.baseColor.map((c) => Math.max(0, c - 0.2));
-	// const r = sun.r * 1.05;
+	const color = sun.baseColor.map((c) => Math.max(0, c - 0.3));
+	const r = sun.r * 1.1;
+	[8,8,4,4,4,3].forEach((s) => makeOuterSun(s, r, color));
 	// makeOuterSun(8, r, color);
 	// makeOuterSun(8, r, color);
 	// makeOuterSun(3, r, color);
@@ -429,6 +438,12 @@ const setupInput = (canvas, ship) => {
 		ship.rotation = theta - Math.PI/2;
 		achieve('rotate');
 	};
+	document.addEventListener('click', (e) => {
+		console.log(e.target, e);
+		if (e.target.id === 'restart') {
+			location.reload();
+		}
+	});
 };
 
 // Create glp
