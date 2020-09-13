@@ -1,14 +1,16 @@
 # 404 Orbiting Asteroids for JS13k 2020
 
-Play the latest version: https://deathraygames.github.io/404-js13k-2020/dist/
+[Play the latest version: https://deathraygames.github.io/404-js13k-2020/dist/](https://deathraygames.github.io/404-js13k-2020/dist/)
 
 ## JS13k
 
 * [JS13k Rules](http://2020.js13kgames.com/#rules): Make a game with a package size less than 13k (13,312 bytes)
 * Timeframe: one month (8/13 to 9/13)
 * Theme: *"404"*
-* Entry for this game: https://js13kgames.com/entries/404-orbiting-asteroids
+* [Entry for this game on js13kgames.com](https://js13kgames.com/entries/404-orbiting-asteroids)
 * See all the entries for the competition at http://2020.js13kgames.com/
+
+![404 Orbiting Asteroids](./images/Smaller1.png)
 
 ## Post Mortem
 
@@ -26,6 +28,8 @@ I spent most of the month learning WebGL and working on a starfield background, 
 ### Gameplay
 
 As a clone of a classic, the gameplay didn't require too much thought: *Fly around & shoot asteroids*. I knew I wanted some gravity to make flying more interesting, and since it [didn't make too much sense](https://twitter.com/deathraygames/status/1300966473280753664/photo/1) to have the asteroids with a strong force of gravity, I decided to add a big mass in the center. I originally wanted both a sun and a few planets (like [Star Hopper Glitch Jump](https://github.com/deathraygames/star-hopper-glitch)), but knew it would be too complicated to keep the planets in orbit (it would be a bit chaotic if the player could bump the planet into the sun), so I stuck with only one mass: a sun.
+
+![Early development screenshot](./images/triangles_small.png)
 
 Luckily I already had an [algorithm for determining the velocity vector needed to put an object in orbit](https://github.com/deathraygames/lunar-lander-13k/blob/master/src/scripts/physics.js#L23), which I used to set the asteroid's initial velocity, but I quickly found that it didn't work well with the game, and the asteroids always fell into the sun. Part of the problem comes from the asteroids constantly bumping into each other and losing energy, but even without that problem (i.e., if using just 1 asteroid) I found that they still don't enter a perfect orbit. I'm still not sure what the problem is, but after plenty of testing, I found that the falling asteroids actually made for interesting gameplay. Fallin asteroids could bump the player into the dangerous sun, and it was easy enough to make the asteroids re-spawn once they hit the sun, so I decided not to try to fix the gravity problem.
 
@@ -45,7 +49,7 @@ Of course the biggest challenge in the game is really the boredom that comes fro
 
 When thinking about controls, I decided to copy [Reassembly](https://www.anisopteragames.com/) - a game that feels intuitive to play, and is a game I really enjoy. Rotation of the ship follows the mouse, and clicking fires the weapons. To make the game playable entirely by mouse I made right-click fire the engines. Later on, as an after-thought, I also added some keyboard controls: "w" to fire engines and space bar to fire.
 
-Because games made for competitions like js13k are naturally only played for a few minutes, I knew it was important to making learning the controls as simple as possible. Originally I just did this with some instructions in the introduction text for the game, but [no one reads instructions](https://uxmyths.com/post/647473628/myth-people-read-on-the-web). I finally came up with the idea of **acheivements**. Each control is its own achievement which gets checked-off on the instructions as the user does each action (this is something that is also done in Reassembly). This worked really well and I think it helps to make the game quickly accessible. We'll see if the judges agree.
+Because games made for competitions like js13k are naturally only played for a few minutes, I knew it was important to making learning the controls as simple as possible. Originally I just did this with some instructions in the introduction text for the game, but [no one reads instructions](https://uxmyths.com/post/647473628/myth-people-read-on-the-web). I finally came up with the idea of **achievements**. Each control is its own achievement which gets checked-off on the instructions as the user does each action (this is something that is also done in Reassembly). This worked really well and I think it helps to make the game quickly accessible. We'll see if the judges agree.
 
 ### Polish
 
@@ -86,3 +90,5 @@ If I was to keep working on this I would do a few other things...
 ## Credits
 
 Thanks to [Xem](https://github.com/xem) ([great article](https://xem.github.io/articles/js13k19.html)), [Frank Force](https://github.com/KilledByAPixel), [Mr. Art of Code](https://www.youtube.com/channel/UCcAlTqd9zID6aNX3TzwxJXg), and [gfx fundamentals](https://webglfundamentals.org/webgl/lessons/webgl-fundamentals.html).
+
+![404 Orbiting Asteroids](./images/Bigger1.png)
