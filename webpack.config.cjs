@@ -16,7 +16,7 @@ const ex = {
 		libraryExport: 'default',
 		libraryTarget: 'window'
 	},
-	devtool: 'inline-source-map',
+	// devtool: 'inline-source-map',
 	optimization: { minimize: true }, // TODO: remove when not testing
 	// externals: [nodeExternals()], // for node
 };
